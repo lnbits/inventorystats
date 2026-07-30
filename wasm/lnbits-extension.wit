@@ -1,0 +1,39 @@
+package lnbits:extension;
+
+interface host {
+  record http-response-data {
+    status-code: u16,
+    headers: list<tuple<string, string>>,
+    body: string
+  }
+
+  record extension-api-request-options {
+    extension-id: string,
+    method: string,
+    path: string,
+    body: option<string>
+  }
+
+  record now-response {
+    timestamp: u64
+  }
+
+  record log-request {
+    level: string,
+    message: string
+  }
+
+  record log-response {
+    ok: bool
+  }
+
+  extension-api-request: func(request: extension-api-request-options) -> http-response-data;
+  now: func() -> now-response;
+  log: func(request: log-request) -> log-response;
+}
+
+world inventorystats {
+  import host;
+
+  export get-inventory-stats: func(request-json: string) -> string;
+}
