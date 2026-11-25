@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node scripts/build-wasm.mjs",
     "check": "cargo fmt --check && cargo test --locked --lib && node --check ../static/admin.js && node --check ../static/lnbits-extension-sdk.js && npm run test:component",
-    "test:component": "npx --yes @bytecodealliance/jco@1.25.2 transpile ../wasm/module.wasm --instantiation sync --no-wasi-shim --name guest -o target/test-component && node test/index.test.js"
+    "test:component": "npx --yes @bytecodealliance/jco@1.25.2 transpile ../wasm/module.wasm --instantiation sync --no-wasi-shim --name guest -o target/test-component && node test/index.test.js",
+    "pretest:component": "npm run build"
   }
 }
