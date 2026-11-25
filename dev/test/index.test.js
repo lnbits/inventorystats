@@ -1,5 +1,5 @@
 import assertModule from 'assert'
-import {promises as fs} from 'fs'
+import {component} from './component.mjs'
 
 const assert = assertModule.strict
 const tests = []
@@ -133,15 +133,18 @@ async function moduleWithInventory(overrides = {}) {
     }
   }
 
-  let source = await fs.readFile(new URL('../src/index.js', import.meta.url), 'utf8')
-  source = source
-    .replace(/^import .*\n\n/, '')
-    .replace(/export function /g, 'function ')
-  const api = Function(
-    'extension',
-    'system',
-    `${source}; return {getInventoryStats}`
-  )(extension, system)
+  const api = component({
+    'lnbits:extension/host': {
+      extensionApiRequest(request) {
+        return {...extension.request(request), headers: []}
+      },
+      now: () => ({timestamp: BigInt(system.now())}),
+      log({message, level}) {
+        system.log(message, level)
+        return {ok: true}
+      }
+    }
+  })
 
   return {api, requests, logMessages}
 }
