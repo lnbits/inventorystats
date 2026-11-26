@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/bundle.mjs && npx --yes @bytecodealliance/jco componentize dist/index.bundle.js --disable all --enable clocks --enable random --enable stdio --wit ../wasm/lnbits-extension.wit --world-name inventorystats -o ../wasm/module.wasm",
-    "check": "\"$npm_node_execpath\" --check src/index.js && \"$npm_node_execpath\" --check src/lnbits-sdk.js && \"$npm_node_execpath\" --check ../static/lnbits-extension-sdk.js && \"$npm_node_execpath\" --check ../static/admin.js && \"$npm_node_execpath\" test/index.test.js"
+    "build": "node scripts/build-wasm.mjs",
+    "check": "cargo fmt --check && cargo test --locked --lib && node --check ../static/admin.js && node --check ../static/lnbits-extension-sdk.js && npm run test:component",
+    "test:component": "npx --yes @bytecodealliance/jco@1.25.2 transpile ../wasm/module.wasm --instantiation sync --no-wasi-shim --name guest -o target/test-component && node test/index.test.js",
+    "pretest:component": "npm run build"
   }
 }

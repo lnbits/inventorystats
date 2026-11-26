@@ -28,9 +28,10 @@ the Inventory API during installation.
 From `dev/`:
 
 ```sh
-npm run check
+rustup target add wasm32-wasip2
 npm run build
+npm run check
 ```
 
-The build bundles the guest JavaScript and componentizes it as
+Cargo builds the Rust guest for the WASI component target and writes
 `wasm/module.wasm`.
